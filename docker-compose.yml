@@ -3,7 +3,7 @@ version: "3"
 services:
   jupyter:
     container_name: jupyter
-    image: jupyter
+    image: agarichan/jupyter
     ports:
       - "8888:8888"
       - "2222:22"
