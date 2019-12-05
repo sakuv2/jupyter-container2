@@ -2,7 +2,6 @@
 
 # homeディレクトリに.pyenvがなければDEFAULTの設定をコピーしてくる
 if [ ! -d /root/.pyenv ]; then
-    ls -al /cp_root
     cp -a /cp_root/. /root
 fi
 rm -rf /cp_root
@@ -20,5 +19,9 @@ fi
 # sshd起動！
 /usr/sbin/sshd
 
-# jupyter起動!
-python /monitoring.py
+if [ $# -eq 0 ]; then
+    # jupyter起動!
+    python /monitoring.py
+else
+    $@
+fi

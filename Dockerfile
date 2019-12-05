@@ -1,5 +1,4 @@
 FROM python:3.7.5-slim
-# FROM ubuntu:18.04
 
 # install sshd
 RUN apt update && apt install -y openssh-server
@@ -55,9 +54,9 @@ c.NotebookApp.notebook_dir = '/root/pyprojects'\
 
 # install poetry
 RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | POETRY_PREVIEW=1 python
-RUN pip install --upgrade keyrings.alt && \
-    . $HOME/.poetry/env && \
-    /root/.poetry/bin/poetry config virtualenvs.in-project true
+# RUN pip install --upgrade keyrings.alt && \
+    # . $HOME/.poetry/env && \
+    # /root/.poetry/bin/poetry config virtualenvs.in-project true
 
 # ホームを後でマウントできるように一旦退避
 RUN mv /root/ /cp_root/ && mkdir /root
@@ -67,4 +66,28 @@ COPY monitoring.py /monitoring.py
 
 EXPOSE 8888
 
-CMD ["/start.sh"]
+# 使いやすくする
+RUN apt install -y software-properties-common && \
+    apt-add-repository -y ppa:fish-shell/release-3 && \
+    apt install -y fish && \
+    apt-add-repository --remove -y ppa:fish-shell/release-3
+
+RUN curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+
+COPY fish /cp_root/.config/fish
+
+RUN apt install -y vim tree htop jq && \
+    pip install -U pip awscli && \
+    curl https://sdk.cloud.google.com | bash
+
+RUN echo "c.NotebookApp.terminado_settings = { 'shell_command': ['/usr/bin/fish'] }" >> /cp_root/.jupyter/jupyter_notebook_config.py
+
+ENV PATH $PATH:/root/google-cloud-sdk/bin
+
+RUN pip install environment_kernels && \
+    echo "\
+c.NotebookApp.kernel_spec_manager_class='environment_kernels.EnvironmentKernelSpecManager'\n\
+c.EnvironmentKernelSpecManager.env_dirs=['/root/.cache/pypoetry/virtualenvs']\
+" >> /cp_root/.jupyter/jupyter_notebook_config.py
+
+ENTRYPOINT ["/start.sh"]
