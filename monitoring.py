@@ -63,7 +63,7 @@ def loop():
         set_kernel(_ks)
         print('jupyter 再起動')
         p.kill()
-        sleep(1)
+        sleep(5)
         p = start_jupyter()
         ks = _ks
 

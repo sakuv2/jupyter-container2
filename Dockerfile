@@ -56,7 +56,7 @@ c.NotebookApp.notebook_dir = '/root/pyprojects'\
 RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | POETRY_PREVIEW=1 python
 # RUN pip install --upgrade keyrings.alt && \
     # . $HOME/.poetry/env && \
-    # /root/.poetry/bin/poetry config virtualenvs.in-project true
+RUN /root/.poetry/bin/poetry config virtualenvs.in-project true
 
 # ホームを後でマウントできるように一旦退避
 RUN mv /root/ /cp_root/ && mkdir /root
@@ -84,10 +84,16 @@ RUN echo "c.NotebookApp.terminado_settings = { 'shell_command': ['/usr/bin/fish'
 
 ENV PATH $PATH:/root/google-cloud-sdk/bin
 
-RUN pip install environment_kernels && \
-    echo "\
-c.NotebookApp.kernel_spec_manager_class='environment_kernels.EnvironmentKernelSpecManager'\n\
-c.EnvironmentKernelSpecManager.env_dirs=['/root/.cache/pypoetry/virtualenvs']\
-" >> /cp_root/.jupyter/jupyter_notebook_config.py
+# jupyterlab extension
+RUN apt-get install -y nodejs npm && \
+    npm install n -g && \
+    n lts
+RUN export NODE_OPTIONS=--max-old-space-size=4096 && \
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager@1.1 --no-build && \
+    jupyter labextension install plotlywidget@1.3.0 --no-build && \
+    jupyter labextension install jupyterlab-plotly@1.3.0 --no-build && \
+    jupyter labextension install @lckr/jupyterlab_variableinspector --no-build && \
+    jupyter labextension install @jupyterlab/toc --no-build && \
+    jupyter lab build
 
 ENTRYPOINT ["/start.sh"]
