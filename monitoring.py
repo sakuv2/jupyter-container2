@@ -17,7 +17,7 @@ if not project_path.exists():
 def start_jupyter():
     cmd = "/usr/local/bin/jupyter lab"
     p = subprocess.Popen(cmd.split(), stderr=subprocess.STDOUT)
-    print('jupyter 起動')
+    print('jupyter start')
     return p
 
 
@@ -61,7 +61,7 @@ def loop():
 
     if ks != _ks:
         set_kernel(_ks)
-        print('jupyter 再起動')
+        print('jupyter restart')
         p.kill()
         sleep(5)
         p = start_jupyter()
