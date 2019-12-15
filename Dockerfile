@@ -1,4 +1,4 @@
-FROM python:3.7.5-slim
+FROM nvidia/cuda:10.0-cudnn7-runtime-ubuntu18.04
 
 # install sshd
 RUN apt update && apt install -y openssh-server
@@ -16,6 +16,7 @@ EXPOSE 22
 
 # install pyenv
 RUN apt install -y \
+    python3 python3-pip \
     git \
     curl \
     build-essential \
@@ -33,6 +34,8 @@ RUN apt install -y \
     libncursesw5-dev \
     libffi-dev \
     uuid-dev
+RUN ln -s /usr/bin/python3 /usr/bin/python && \
+    ln -s /usr/bin/pip3 /usr/bin/pip
 
 ENV PYENV_ROOT=/root/.pyenv \
     PATH=/root/.pyenv/bin:$PATH
@@ -54,8 +57,7 @@ c.NotebookApp.notebook_dir = '/root/pyprojects'\
 
 # install poetry
 RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | POETRY_PREVIEW=1 python
-# RUN pip install --upgrade keyrings.alt && \
-    # . $HOME/.poetry/env && \
+RUN pip install --upgrade keyrings.alt 
 RUN /root/.poetry/bin/poetry config virtualenvs.in-project true
 
 # ホームを後でマウントできるように一旦退避
