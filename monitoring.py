@@ -15,7 +15,7 @@ if not project_path.exists():
 
 
 def start_jupyter():
-    cmd = "/usr/local/bin/jupyter lab"
+    cmd = "jupyter lab"
     p = subprocess.Popen(cmd.split(), stderr=subprocess.STDOUT)
     print('jupyter start')
     return p
