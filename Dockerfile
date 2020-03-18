@@ -78,7 +78,7 @@ RUN export NODE_OPTIONS=--max-old-space-size=4096 && \
     jupyter labextension install @jupyterlab/toc --no-build && \
     jupyter lab build
 
-RUN apt install -y libpq-dev lsof locales iproute2
+RUN apt install -y libpq-dev lsof locales iproute2 language-pack-ja
 
 # ホームを後でマウントできるように一旦退避
 RUN mv /root/ /cp_root/ && mkdir /root

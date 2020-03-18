@@ -51,5 +51,5 @@ end
 
 function fish_right_prompt --description '右側に pwd と git status を表示'
 #   __fish_git_prompt
-  echo (date "+%Y/%m/%d %H:%M:%S")
+  # echo (date "+%Y/%m/%d %H:%M:%S")
 end
