@@ -1,4 +1,4 @@
-FROM nvidia/cuda:10.2-cudnn7-runtime-ubuntu18.04
+FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 
 # install sshd
 RUN apt update && apt install -y openssh-server && \
@@ -63,8 +63,7 @@ c.NotebookApp.terminado_settings = { 'shell_command': ['/usr/bin/fish'] }\
 " > ~/.jupyter/jupyter_notebook_config.py
 
 # install poetry
-RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | POETRY_PREVIEW=1 python && \
-    pip install --upgrade keyrings.alt && \
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python && \
     /root/.poetry/bin/poetry config virtualenvs.in-project true
 
 # 使いやすくする
