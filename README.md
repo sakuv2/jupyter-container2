@@ -19,3 +19,5 @@ sshは鍵認証only事前に公開鍵をマウントする。
 ```
 docker-compose up -d
 ```
+
+## develにした
